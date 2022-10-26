@@ -52,7 +52,15 @@ def RMQUtil( hist,st, ss, se, qs, qe, index) :
 # Return minimum of elements in range
 # from index qs (query start) to
 # qe (query end). It mainly uses RMQUtil()
-
+def RMQ( hist,st, n, qs, qe) :
+	
+	# Check for erroneous input values
+	if (qs < 0 or qe > n - 1 or qs > qe) :
+		
+		print("Invalid Input");
+		return -1;
+		
+	return RMQUtil(hist,st, 0, n - 1, qs, qe, 0);
 	
 # A recursive function that constructs
 # Segment Tree for array[ss..se].
