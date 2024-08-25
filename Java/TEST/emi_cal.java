@@ -1,3 +1,4 @@
+package Learning.Java.TEST;
 //program to calculate emi in java
 import java.util.*;
 import java.util.Scanner;

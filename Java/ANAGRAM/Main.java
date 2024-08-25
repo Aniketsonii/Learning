@@ -1,12 +1,7 @@
+package Learning.Java.ANAGRAM;
 
 
-// Problem Statement : Check whether 2 strings are anagrams are not? //
-
-
-// code for anagrams in java //
-package strings;
-
-public class Anagrams {
+public class Main {
 
 	public static void main(String[] args) {
 		boolean isAnagram = true;
