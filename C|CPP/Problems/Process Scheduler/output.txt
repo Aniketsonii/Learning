@@ -1,0 +1,20 @@
+[12001ms] Process 1 (INTERACTIVE) started.
+[17247ms] Process 1 (INTERACTIVE) completed in 5246ms.
+[17247ms] Process 2 (REAL-TIME) started.
+[17278ms] CPU allocated to Real-time Process 2.
+[24423ms] Process 2 (REAL-TIME) completed in 7176ms.
+[24423ms] Process 3 (INTERACTIVE) started.
+[24529ms] CPU preempted from Interactive Process 3.
+[29669ms] Process 3 (INTERACTIVE) completed in 5246ms.
+[29669ms] Process 4 (INTERACTIVE) started.
+[34907ms] Process 4 (INTERACTIVE) completed in 5238ms.
+
+Summary Report:
+a) Real-time processes completed: 1
+b) Percentage of real-time processes that missed their deadline: 0.00%
+c) Interactive processes completed: 3
+d) Total number of disk accesses: 4
+e) Average duration of a disk access: 4421.75 ms
+f) Total time elapsed since the start of the first process: 34907 ms
+g) CPU utilization: 2.29%
+h) Disk utilization: 50.67%
