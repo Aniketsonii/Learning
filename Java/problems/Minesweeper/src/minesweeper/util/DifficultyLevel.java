@@ -1,4 +1,4 @@
-package Learning.Java.problems.Minesweeper.src.minesweeper.util;
+package minesweeper.util;
 
 public enum DifficultyLevel {
     EASY,

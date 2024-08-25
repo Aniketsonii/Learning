@@ -1,4 +1,4 @@
-package Learning.Java.problems.Minesweeper.src.minesweeper.game;
+package minesweeper.game;
 
 public class MinesweeperGame {
     public static void main(String[] args) {

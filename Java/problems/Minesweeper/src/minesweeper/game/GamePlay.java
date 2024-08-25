@@ -1,11 +1,11 @@
-package Learning.Java.problems.Minesweeper.src.minesweeper.game;
+package minesweeper.game;
 
+
+import minesweeper.board.Board;
+import minesweeper.board.Cell;
+import minesweeper.util.DifficultyLevel;
 
 import java.util.Scanner;
-
-import Learning.Java.problems.Minesweeper.src.minesweeper.board.Board;
-import Learning.Java.problems.Minesweeper.src.minesweeper.board.Cell;
-import Learning.Java.problems.Minesweeper.src.minesweeper.util.DifficultyLevel;
 
 public class GamePlay {
     private Board board;

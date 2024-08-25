@@ -1,8 +1,11 @@
-package Learning.Java.problems.Minesweeper.src.minesweeper.board;
+package minesweeper.board;
+
+
+
 
 import java.util.Random;
 
-import Learning.Java.problems.Minesweeper.src.minesweeper.util.DifficultyLevel;
+import minesweeper.util.DifficultyLevel;
 
 public class Board {
     private Cell[][] cells;

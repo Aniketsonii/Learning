@@ -1,4 +1,6 @@
-package Learning.Java.problems.Minesweeper.src.minesweeper.board;
+package minesweeper.board;
+
+
 
 public class Cell {
     private boolean isBomb;

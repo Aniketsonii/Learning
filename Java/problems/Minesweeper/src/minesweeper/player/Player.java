@@ -1,4 +1,4 @@
-package Learning.Java.problems.Minesweeper.src.minesweeper.player;
+package minesweeper.player;
 
 public class Player {
     private String name;
