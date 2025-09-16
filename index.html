@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Snake Game</title>
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    background: #000;
+    font-family: Arial, sans-serif;
+    color: white;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100vh;
+  }
+
+  .grid-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+  }
+
+  .snake, .food, .particle {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    transition: all 0.1s linear;
+    border-radius: 4px;
+  }
+
+  /* Glow animations */
+  @keyframes snakeBreathe {
+    0%,100%{box-shadow:0 0 5px #64B5F6;}50%{box-shadow:0 0 20px #64B5F6;}
+  }
+  .snake { background: #64B5F6; animation: snakeBreathe 1s infinite; }
+
+  @keyframes foodBreathe {
+    0%,100%{box-shadow:0 0 5px #FF1744;}50%{box-shadow:0 0 20px #FF1744;}
+  }
+  .food { background: #FF1744; animation: foodBreathe 1s infinite; }
+
+  .score {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 1.5rem;
+    color: #fff;
+  }
+
+  /* Triangle tail */
+  .tail {
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 20px solid #64B5F6;
+    position: absolute;
+    transition: all 0.1s linear;
+  }
+
+  #startBtn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.5rem;
+    padding: 10px 20px;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+<div class="score" id="score">Score: 0</div>
+<div class="grid-container" id="grid-container"></div>
+<button id="startBtn">Start Game</button>
+
+<script>
+const GRID_SIZE = 20;
+const container = document.getElementById("grid-container");
+const startBtn = document.getElementById("startBtn");
+
+let cols = Math.floor(window.innerWidth / GRID_SIZE);
+let rows = Math.floor(window.innerHeight / GRID_SIZE);
+
+let snake = [];
+let direction = {x:1,y:0};
+let food = {x:5,y:5};
+let score = 0;
+let intervalTime = 150;
+let interval;
+let snakeElements = [];
+let foodEl = document.createElement("div");
+foodEl.className = "food";
+container.appendChild(foodEl);
+
+let tailEl = document.createElement("div");
+tailEl.className = "tail";
+container.appendChild(tailEl);
+
+function startGame() {
+  startBtn.style.display = "none";
+  snake.forEach(p => p.el?.remove());
+  snakeElements = [];
+  snake = [{x:2,y:0},{x:1,y:0},{x:0,y:0}];
+  direction = {x:1,y:0};
+  score = 0;
+  intervalTime = 150;
+  document.getElementById("score").textContent = "Score: "+score;
+  generateFood();
+  snake.forEach(part=>{
+    const div=document.createElement("div");
+    div.className="snake";
+    container.appendChild(div);
+    part.el=div;
+    snakeElements.push(div);
+    moveElement(div,part.x,part.y);
+  });
+  moveElement(foodEl,food.x,food.y);
+  updateTail();
+  clearInterval(interval);
+  interval=setInterval(move,intervalTime);
+}
+
+function moveElement(el,x,y){
+  el.style.left = x*GRID_SIZE+"px";
+  el.style.top = y*GRID_SIZE+"px";
+}
+
+function move() {
+  const head = snake[0];
+  const newHead = {x: head.x+direction.x, y: head.y+direction.y};
+
+  if(newHead.x<0||newHead.x>=cols||newHead.y<0||newHead.y>=rows) return gameOver();
+  if(snake.some(p=>p.x===newHead.x&&p.y===newHead.y)) return gameOver();
+
+  snake.unshift(newHead);
+  const div=document.createElement("div");
+  div.className="snake";
+  container.appendChild(div);
+  newHead.el=div;
+  snakeElements.unshift(div);
+  moveElement(div,newHead.x,newHead.y);
+
+  if(newHead.x===food.x&&newHead.y===food.y){
+    score++;
+    document.getElementById("score").textContent="Score: "+score;
+    intervalTime*=0.9;
+    clearInterval(interval);
+    interval=setInterval(move,intervalTime);
+    generateFood();
+    spawnParticles(newHead.x,newHead.y);
+  } else {
+    const tail = snake.pop();
+    tail.el.remove();
+  }
+  updateTail();
+}
+
+function generateFood(){
+  let x,y;
+  do{
+    x=Math.floor(Math.random()*cols);
+    y=Math.floor(Math.random()*rows);
+  }while(snake.some(p=>p.x===x&&p.y===y));
+  food.x=x;
+  food.y=y;
+  moveElement(foodEl,food.x,food.y);
+}
+
+function updateTail(){
+  const tail = snake[snake.length-1];
+  const prev = snake[snake.length-2];
+  const dx = tail.x - prev.x;
+  const dy = tail.y - prev.y;
+
+  tailEl.style.left = tail.x * GRID_SIZE + "px";
+  tailEl.style.top = tail.y * GRID_SIZE + "px";
+
+  if (dx === 1) tailEl.style.transform = "rotate(-90deg)";
+  else if (dx === -1) tailEl.style.transform = "rotate(90deg)";
+  else if (dy === 1) tailEl.style.transform = "rotate(0deg)";
+  else if (dy === -1) tailEl.style.transform = "rotate(180deg)";
+}
+
+function spawnParticles(x,y){
+  for(let i=0;i<8;i++){
+    const p=document.createElement("div");
+    p.className="particle";
+    p.style.width="6px";
+    p.style.height="6px";
+    p.style.background="#FFEA00";
+    p.style.borderRadius="50%";
+    p.style.left=x*GRID_SIZE+7+"px";
+    p.style.top=y*GRID_SIZE+7+"px";
+    container.appendChild(p);
+
+    const angle=Math.random()*2*Math.PI;
+    const distance=20+Math.random()*20;
+    const dx=Math.cos(angle)*distance;
+    const dy=Math.sin(angle)*distance;
+
+    p.animate([
+      {transform:`translate(0,0)`, opacity:1},
+      {transform:`translate(${dx}px,${dy}px)`, opacity:0}
+    ],{duration:500, easing:"ease-out"});
+    
+    setTimeout(()=>p.remove(),500);
+  }
+}
+
+document.addEventListener("keydown",e=>{
+  if(e.key==="ArrowRight"||e.key==="d") direction={x:1,y:0};
+  else if(e.key==="ArrowLeft"||e.key==="a") direction={x:-1,y:0};
+  else if(e.key==="ArrowUp"||e.key==="w") direction={x:0,y:-1};
+  else if(e.key==="ArrowDown"||e.key==="s") direction={x:0,y:1};
+});
+
+function gameOver(){
+  clearInterval(interval);
+  alert("Game Over! Score: "+score);
+  startBtn.style.display = "block";
+}
+
+startBtn.addEventListener("click", startGame);
+</script>
+</body>
+</html>
